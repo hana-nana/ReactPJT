@@ -1,0 +1,3 @@
+[submodule "movie-pjt"]
+    path = movie-pjt
+    url = https://repository.url/https://github.com/hana-nana/ReactPJT.git
