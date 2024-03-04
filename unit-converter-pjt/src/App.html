@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+        // 아래의 MinutesToHours()은 한 개의 컴포넌트임
+        function MinutesToHours() {
+          const [minutes, setMinutes] = React.useState(0);
+          const [flipped, setFlipped] = React.useState(false);
+          const onChange = (event) => {
+            setMinutes(event.target.value);
+          };
+          const reset = () => setMinutes(0);
+          const onFlip = () => {
+            reset();
+            setFlipped((current) => !current)
+          };
+
+          return(
+          <div>
+            <div>
+              <label htmlFor="minutes">Minutes</label>
+              <input
+              value={flipped ? minutes * 60 : minutes}
+              id="minutes" 
+              placeholder="Minutes" 
+              type="number" 
+              onChange={onChange}
+              disabled={flipped === true}
+              />
+            </div>
+            <div>
+              <label htmlFor="hours">Hours</label>
+              <input 
+              value={flipped ? minutes : Math.round(minutes / 60)}
+              id="hours"
+              placeholder="Hours"
+              type="number"
+              onChange={onChange}
+              disabled={flipped === false}
+              />
+            </div>
+            
+            <button onClick={reset}>Reset</button>
+            <button onClick={onFlip}>{flipped ? "Turn back" : "Flip"}</button>
+            </div>
+          );
+        };
+        
+        // 킬로미터를 마일로 바꾸는 컴포넌트
+        function KmToMiles() {
+          return <h3>KM to M</h3>;
+        };
+
+        // root div를 그려주는 부모컴포넌트(위의 2개 컴포넌트를 렌더링하는 역할)
+        function App() {
+          // 1) 시간/분 변환기와 킬로미터/마일 변환기 중 선택하도록 하기위해 상태를 전환하는 state
+          // useState안에 디폴트 값을 넣으면 처음 브라우저 화면 보여질 때 뭐라도 보여지고 시작하게 하기 위함(안넣으면 선택해야 보임)
+          const [index, setIndex] = React.useState("xx");
+          // 3) 변환기 간의 변화를 리스닝해주기 위해 아래 select에 onChange속성 넣고, 그안에 넣을 onSelect함수 생성
+          const onSelect = (event) => {
+            setIndex(event.target.value);
+          };
+          return(
+          // 2) select, option태그는 그냥 html태그임. 둘 중 선택가능하도록 함
+          // (아래 select태그 안에 value값을 준 이유는 나중에 수정할 경우를 대비)
+          <div>
+            <h1 className="hi">Super Converter</h1>
+            <select value={index} onChange={onSelect}>
+              <option value="xx">Select your units</option>
+              <option value="0">Minutes & Hours</option>
+              <option value="1">Km & Miles</option>
+            </select>
+            {index === "0" ? <MinutesToHours /> : null}
+            {index === "1" ? <KmToMiles /> : null}
+          </div>
+          // 위의 중괄호문 2개는 js의 조건문임 (저런 위치에 js 작성하고 싶다면 중괄호 안에 작성해야함)
+          // index의 변화를 리스닝해주는 조건문들임 (onSelect로 변화한 것에 맞춰 조건문에 해당하는 것이 보여짐)
+          );
+        };
+        
+
+        const root = document.getElementById("root");
+        ReactDOM.render(<App />, root);
+
+    </script>
+  </body>
+</html>
